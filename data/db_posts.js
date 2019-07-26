@@ -56,6 +56,28 @@ router.get('/:id/comments', (req, res) => {
     .json({ error: 'The comments information could not be retrieved.' });
   });
 });
+
+router.post('/', (req, res) => {
+ const body = req.body;
+ //  console.log(body);
+ if (!body.title || !body.contents) {
+  res
+   .status(400)
+   .json({ errorMessage: 'Please provide title and contents for the post.' });
+  return;
+ }
+ postsDB
+  .insert(body)
+  .then(post => {
+   res.status(201).json(post);
+  })
+  .catch(err => {
+   res.status(500).json({
+    error: 'There was an error while saving the post to the database',
+    err,
+   });
+  });
+});
   });
 });
 
