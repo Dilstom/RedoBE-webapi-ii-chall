@@ -78,6 +78,26 @@ router.post('/', (req, res) => {
    });
   });
 });
+
+router.delete('/:id', (req, res) => {
+ const id = req.params.id;
+
+ postsDB
+  .remove(id)
+  .then(removedId => {
+   if (removedId) {
+    res.status(200).json(removed);
+   } else {
+    res
+     .status(404)
+     .json({ message: 'The post with the specified ID does not exist.' });
+   }
+  })
+  .catch(err => {
+   res.status(500).json({ error: 'The post could not be removed' });
+  });
+});
+
   });
 });
 
