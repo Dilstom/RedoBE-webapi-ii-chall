@@ -47,7 +47,7 @@ router.get('/:id/comments', (req, res) => {
    } else {
     res
      .status(404)
-     .json({ message: 'The post with the specified ID does not exist.' });
+     .json({ message: 'There is no any comments for this post ID.' });
    }
   })
   .catch(err => {
@@ -79,6 +79,37 @@ router.post('/', (req, res) => {
   });
 });
 
+router.post('/:id/comments', (req, res) => {
+ const commentInfo = { ...req.body, post_id: req.params.id };
+ console.log(commentInfo);
+
+ postsDB
+  .findById(req.params.id)
+  .then(post => {
+   if (post.length > 0) {
+    postsDB
+     .insertComment(commentInfo)
+     .then(post => {
+      res.status(201).json(post);
+     })
+     .catch(err => {
+      res.status(500).json({
+       error: 'There was an error while saving the comment to the database',
+      });
+     });
+   } else {
+    res
+     .status(404)
+     .json({ message: 'The post with the specified ID does not exist.' });
+   }
+  })
+  .catch(err => {
+   res.status(500).json({
+    error: 'There was an error while saving the comment to the database',
+   });
+  });
+});
+
 router.delete('/:id', (req, res) => {
  const id = req.params.id;
 
@@ -102,7 +133,7 @@ router.put('/:id', (req, res) => {
  const id = req.params.id;
  const body = req.body;
 
- console.log(body);
+ //  console.log(body);
  if (!body.title || !body.contents) {
   res
    .status(400)
