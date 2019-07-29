@@ -117,7 +117,7 @@ router.delete('/:id', (req, res) => {
   .remove(id)
   .then(removedId => {
    if (removedId) {
-    res.status(200).json(removed);
+    res.status(200).json(removedId);
    } else {
     res
      .status(404)
